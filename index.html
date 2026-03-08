@@ -1,76 +1,85 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Sigma_TreesGames | Hub</title>
+    <title>Sigma_TreesGames | Math</title>
+    <!-- Secret script to help force games through school proxies -->
     <script type="module" src="https://unpkg.com"></script>
     <style>
-        /* Theme Variables */
         :root {
-            --bg-color: #022c22;
-            --text-color: #ecfdf5;
-            --header-bg: #000000;
-            --card-bg: #000000;
+            --bg: #022c22;
+            --text: #ecfdf5;
+            --header: #000000;
             --accent: #10b981;
-            --btn-shadow: #059669;
+            --card: #064e3b;
         }
 
+        /* Stealth Mode (Looks like a Google Doc / Math Paper) */
         .light-mode {
-            --bg-color: #f3f4f6;
-            --text-color: #111827;
-            --header-bg: #ffffff;
-            --card-bg: #ffffff;
-            --accent: #059669;
-            --btn-shadow: #d1d5db;
+            --bg: #ffffff;
+            --text: #202124;
+            --header: #f1f3f4;
+            --accent: #1a73e8;
+            --card: #e8f0fe;
         }
 
-        body { background-color: var(--bg-color); color: var(--text-color); font-family: 'Segoe UI', sans-serif; text-align: center; margin: 0; padding: 0; min-height: 100vh; transition: 0.3s; }
+        body { background-color: var(--bg); color: var(--text); font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; text-align: center; margin: 0; padding: 0; min-height: 100vh; transition: 0.2s; }
         
-        .header-bar { background-color: var(--header-bg); padding: 15px; border-bottom: 4px solid var(--accent); }
-        h1 { color: var(--accent); margin: 0; font-size: 2.2em; text-shadow: 2px 2px rgba(0,0,0,0.5); }
+        .header-bar { background-color: var(--header); padding: 15px; border-bottom: 3px solid var(--accent); position: relative; }
+        h1 { color: var(--accent); margin: 0; font-size: 2em; letter-spacing: 1px; }
         
-        /* Theme Toggle Button */
-        .theme-btn { position: absolute; top: 20px; right: 20px; padding: 10px; cursor: pointer; border-radius: 50%; border: 2px solid var(--accent); background: var(--header-bg); font-size: 1.2em; }
+        .theme-btn { position: absolute; top: 15px; right: 20px; padding: 10px; cursor: pointer; border-radius: 8px; border: 2px solid var(--accent); background: transparent; color: var(--accent); font-weight: bold; }
 
-        .search-box { margin-top: 10px; }
-        #gameSearch { padding: 10px; width: 250px; border-radius: 20px; border: 2px solid var(--accent); background: var(--bg-color); color: var(--text-color); outline: none; }
+        /* The Warning Message */
+        .warning-msg { background: #7f1d1d; color: #fecaca; padding: 10px; font-size: 0.85em; font-weight: bold; border-bottom: 2px solid #b91c1c; }
+
+        .search-box { margin: 15px 0; }
+        #gameSearch { padding: 10px; width: 280px; border-radius: 20px; border: 2px solid var(--accent); background: var(--bg); color: var(--text); outline: none; text-align: center; }
 
         .category-menu { display: flex; justify-content: center; gap: 15px; padding: 20px; background: rgba(0,0,0,0.1); flex-wrap: wrap; }
         .cat-btn { 
-            background: var(--accent); color: #fff; padding: 15px 30px; border-radius: 12px; 
+            background: var(--accent); color: white; padding: 15px 30px; border-radius: 15px; 
             font-weight: 900; cursor: pointer; border: none; font-size: 1.1em; 
-            transition: 0.2s; box-shadow: 0 4px 0 var(--btn-shadow);
+            transition: 0.2s; box-shadow: 0 5px 0 #059669;
         }
-        .cat-btn:hover { transform: translateY(-3px); box-shadow: 0 6px 0 var(--btn-shadow); opacity: 0.9; }
+        .cat-btn:hover { transform: translateY(-3px); box-shadow: 0 8px 0 #059669; }
 
+        /* Galleries */
         .gallery { display: none; flex-wrap: wrap; justify-content: center; gap: 12px; padding: 20px; }
         .active-gallery { display: flex; }
 
         .game-card { 
-            width: 85px; cursor: pointer; transition: 0.3s; border-radius: 15px; 
-            padding: 10px; background: var(--card-bg); border: 2px solid var(--accent); 
+            width: 90px; cursor: pointer; transition: 0.3s; border-radius: 12px; 
+            padding: 12px; background: var(--card); border: 2px solid var(--accent); 
         }
-        .game-card:hover { transform: scale(1.1); box-shadow: 0 0 15px var(--accent); }
-        .game-icon { font-size: 35px; display: block; margin-bottom: 5px; }
-        .game-card span { font-size: 0.65em; font-weight: bold; display: block; }
+        .game-card:hover { transform: scale(1.1); background: #000; border-color: #fff; }
+        .game-icon { font-size: 40px; display: block; margin-bottom: 8px; }
+        .game-card span { font-size: 0.65em; font-weight: bold; display: block; text-transform: uppercase; }
 
-        #game-container { width: 85%; max-width: 750px; height: 420px; margin: 20px auto; border: 5px solid var(--accent); border-radius: 15px; overflow: hidden; background: #000; }
+        /* Game Display Window */
+        #game-box-wrapper { width: 85%; max-width: 650px; height: 380px; margin: 20px auto; border: 5px solid var(--accent); border-radius: 15px; overflow: hidden; background: #000; box-shadow: 0 10px 40px rgba(0,0,0,0.6); }
         iframe { width: 100%; height: 100%; border: none; }
 
-        .controls { margin-top: 10px; display: flex; justify-content: center; gap: 10px; padding-bottom: 60px; }
-        .btn-action { background: var(--accent); color: white; padding: 12px 20px; border-radius: 8px; font-weight: bold; cursor: pointer; border: none; }
+        .controls { margin-top: 10px; display: flex; justify-content: center; gap: 10px; padding-bottom: 80px; }
+        .btn-action { background: var(--accent); color: white; padding: 12px 24px; border-radius: 10px; font-weight: bold; cursor: pointer; border: none; }
         .btn-tab { background: #1e40af; }
         
-        .version-tag { position: fixed; bottom: 10px; right: 15px; color: var(--accent); font-size: 0.7em; font-weight: bold; background: var(--header-bg); padding: 5px 10px; border-radius: 5px; }
+        .version-tag { position: fixed; bottom: 10px; right: 15px; color: var(--accent); font-size: 0.7em; font-weight: bold; background: var(--header); padding: 5px 10px; border-radius: 5px; }
     </style>
 </head>
 <body>
 
     <div class="header-bar">
-        <button class="theme-btn" onclick="toggleTheme()">🌓</button>
-        <h1>Sigma_TreesGames</h1>
-        <div class="search-box">
-            <input type="text" id="gameSearch" placeholder="🔍 Search Unblocked..." onkeyup="searchGames()">
-        </div>
+        <button class="theme-btn" onclick="toggleTheme()">STEALTH MODE</button>
+        <h1 id="main-title">Sigma_TreesGames</h1>
+    </div>
+
+    <!-- Warning Bar -->
+    <div class="warning-msg">
+        ⚠️ U might have to click on a game 1-3 times for it to work!
+    </div>
+
+    <div class="search-box">
+        <input type="text" id="gameSearch" placeholder="🔍 Search Math Resources..." onkeyup="searchGames()">
     </div>
 
     <div class="category-menu">
@@ -79,7 +88,7 @@
         <div class="cat-btn" onclick="showCategory('snakey')">🐍 SNAKEY</div>
     </div>
 
-    <!-- SHOOTERS (Proxied) -->
+    <!-- SHOOTERS (Mirror Mode) -->
     <div id="shooters" class="gallery">
         <div class="game-card" onclick="changeGame('https://shellshock.io', 'Shell Shockers')">
             <span class="game-icon">🥚</span><span>Shell</span>
@@ -92,7 +101,7 @@
         </div>
     </div>
 
-    <!-- CHILL (Fixed Mirrors) -->
+    <!-- CHILL (GitHub Mirror Mode) -->
     <div id="chill" class="gallery active-gallery">
         <div class="game-card" onclick="changeGame('https://krew.io', 'Krew.io')">
             <span class="game-icon">⛵</span><span>Krew.io</span>
@@ -103,33 +112,33 @@
         <div class="game-card" onclick="changeGame('https://bloxd.io', 'Bloxd.io')">
             <span class="game-icon">🧱</span><span>Bloxd.io</span>
         </div>
-        <div class="game-card" onclick="changeGame('https://pages.dev', 'Tiny Fishing')">
-            <span class="game-icon">🎣</span><span>Tiny Fishing</span>
+        <div class="game-card" onclick="changeGame('https://github.io', 'Tiny Fishing')">
+            <span class="game-icon">🎣</span><span>Tiny Fish</span>
         </div>
-        <div class="game-card" onclick="changeGame('https://pages.dev', 'Red Ball 4')">
+        <div class="game-card" onclick="changeGame('https://github.io', 'Red Ball 4')">
             <span class="game-icon">🔴</span><span>Red Ball</span>
         </div>
     </div>
 
-    <!-- SNAKEY (Trick the Proxy Mirrors) -->
+    <!-- SNAKEY (GitHub Mirror Mode) -->
     <div id="snakey" class="gallery">
-        <div class="game-card" onclick="changeGame('https://littlebigsnake.io', 'Big Snake')">
-            <span class="game-icon">🐍</span><span>Snake</span>
-        </div>
         <div class="game-card" onclick="changeGame('https://pages.dev', 'WormZone')">
             <span class="game-icon">🪱</span><span>WormZone</span>
-        </div>
-        <div class="game-card" onclick="changeGame('https://flyordie.io', 'FlyOrDie')">
-            <span class="game-icon">🪰</span><span>FlyOrDie</span>
         </div>
         <div class="game-card" onclick="changeGame('https://github.io', 'Mope.io')">
             <span class="game-icon">🐷</span><span>Mope.io</span>
         </div>
+        <div class="game-card" onclick="changeGame('https://github.io', 'FlyOrDie')">
+            <span class="game-icon">🪰</span><span>FlyOrDie</span>
+        </div>
+        <div class="game-card" onclick="changeGame('https://littlebigsnake.io', 'Big Snake')">
+            <span class="game-icon">🐍</span><span>Snake</span>
+        </div>
     </div>
 
-    <h3 id="play-text" style="color:var(--accent); margin-top:15px;">v1.1.1 Stable Build</h3>
+    <h3 id="play-text" style="color:var(--accent); margin-top:20px;">v1.1.4 Math Resources</h3>
 
-    <div id="game-container">
+    <div id="game-box-wrapper">
         <iframe id="main-game" is="x-frame-bypass" src="about:blank" allow="fullscreen" allowfullscreen></iframe>
     </div>
 
@@ -138,11 +147,20 @@
         <button class="btn-action btn-tab" onclick="launchNewTab();">NEW TAB (Bypass)</button>
     </div>
 
-    <div class="version-tag">v1.1.1</div>
+    <div class="version-tag">v1.1.4</div>
 
     <script>
         function toggleTheme() {
             document.body.classList.toggle('light-mode');
+            let title = document.getElementById('main-title');
+            let docTitle = document.querySelector('title');
+            if (document.body.classList.contains('light-mode')) {
+                title.innerText = "Advanced Mathematics Research";
+                docTitle.innerText = "Advanced Math Research";
+            } else {
+                title.innerText = "Sigma_TreesGames";
+                docTitle.innerText = "Sigma_TreesGames | Math";
+            }
         }
 
         function showCategory(catId) {
@@ -152,7 +170,7 @@
 
         function changeGame(url, name) {
             document.getElementById('main-game').src = url;
-            document.getElementById('play-text').innerText = "Playing: " + name;
+            document.getElementById('play-text').innerText = "Resource: " + name;
             window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
         }
 
@@ -161,8 +179,7 @@
             let cards = document.querySelectorAll('.game-card');
             document.querySelectorAll('.gallery').forEach(g => g.classList.add('active-gallery'));
             cards.forEach(card => {
-                let name = card.innerText.toLowerCase();
-                card.style.display = name.includes(input) ? "block" : "none";
+                card.style.display = card.innerText.toLowerCase().includes(input) ? "block" : "none";
             });
         }
 
@@ -172,7 +189,7 @@
         }
 
         function goFullscreen() {
-            var elem = document.getElementById("game-container");
+            var elem = document.getElementById("game-box-wrapper");
             if (elem.requestFullscreen) { elem.requestFullscreen(); }
             else if (elem.webkitRequestFullscreen) { elem.webkitRequestFullscreen(); }
         }
