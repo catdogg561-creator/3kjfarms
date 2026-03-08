@@ -1,59 +1,92 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>S3hjkGems | Krew.io HQ</title>
+    <title>Sigma_TreesGames | Dr. Donut's Den</title>
     <style>
-        body { background-color: #064e3b; color: #ecfdf5; font-family: sans-serif; text-align: center; margin: 0; padding: 20px; }
-        h1 { color: #10b981; margin-bottom: 10px; }
+        /* Even Darker Forest Green */
+        body { 
+            background-color: #022c22; 
+            color: #ecfdf5; 
+            font-family: 'Segoe UI', sans-serif; 
+            text-align: center; 
+            margin: 0; padding: 20px; 
+        }
+        h1 { color: #10b981; margin-bottom: 5px; font-size: 3em; text-shadow: 3px 3px #000; }
         
-        /* The Game Container */
+        /* Search Bar Style */
+        .search-container { margin: 20px 0; }
+        #gameSearch {
+            padding: 12px;
+            width: 300px;
+            border-radius: 25px;
+            border: 2px solid #10b981;
+            background: #064e3b;
+            color: white;
+            outline: none;
+        }
+
+        /* Game Window */
         #game-container {
-            position: relative;
-            width: 90%;
-            max-width: 1000px;
-            height: 600px;
-            margin: 0 auto;
-            border: 5px solid #059669;
-            border-radius: 15px;
+            width: 95%;
+            max-width: 1100px;
+            height: 650px;
+            margin: 20px auto;
+            border: 6px solid #059669;
+            border-radius: 20px;
             overflow: hidden;
             background: #000;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.7);
         }
-
         iframe { width: 100%; height: 100%; border: none; }
 
+        /* Buttons */
+        .btn-group { margin: 20px; }
         .btn { 
-            background: #059669; color: white; padding: 12px 25px; 
-            text-decoration: none; border-radius: 8px; font-weight: bold;
-            cursor: pointer; border: none; margin-top: 20px;
+            background: #059669; color: white; padding: 15px 30px; 
+            text-decoration: none; border-radius: 12px; font-weight: bold;
+            cursor: pointer; border: none; margin: 5px; display: inline-block;
         }
-        .btn:hover { background: #10b981; }
-        .mascot { width: 100px; border-radius: 50%; border: 3px solid #10b981; margin-bottom: 10px; }
+        .btn:hover { background: #10b981; transform: scale(1.05); }
+        .xbox-btn { background: #107c10; } /* Xbox Green */
+        
+        .mascot { width: 80px; border-radius: 50%; border: 3px solid #10b981; }
     </style>
 </head>
 <body>
     <img src="https://placeholder.com" class="mascot" alt="Dr. Donut">
-    <h1>S3hjkGems</h1>
-    <p>Currently Playing: <strong>Krew.io</strong></p>
-
-    <div id="game-container">
-        <!-- This embeds the actual game -->
-        <iframe src="https://krew.io/" allow="fullscreen" allowfullscreen></iframe>
+    <h1>Sigma_TreesGames</h1>
+    
+    <div class="search-container">
+        <input type="text" id="gameSearch" placeholder="Search for games..." onkeyup="searchGame()">
     </div>
 
-    <br>
-    <button class="btn" onclick="goFullscreen();">MAXIMIZE GAME</button>
+    <div class="btn-group">
+        <button class="btn" onclick="loadGame('https://krew.io')">Krew.io</button>
+        <button class="btn xbox-btn" onclick="loadGame('https://xbox.com')">Xbox Cloud (Fortnite)</button>
+        <button class="btn" onclick="goFullscreen();">MAXIMIZE VIEW</button>
+    </div>
+
+    <div id="game-container">
+        <iframe id="main-game" src="https://krew.io" allow="fullscreen" allowfullscreen></iframe>
+    </div>
 
     <script>
+        function loadGame(url) {
+            document.getElementById('main-game').src = url;
+        }
+
         function goFullscreen() {
             var elem = document.getElementById("game-container");
-            if (elem.requestFullscreen) {
-                elem.requestFullscreen();
-            } else if (elem.webkitRequestFullscreen) { /* Safari */
-                elem.webkitRequestFullscreen();
-            } else if (elem.msRequestFullscreen) { /* IE11 */
-                elem.msRequestFullscreen();
-            }
+            if (elem.requestFullscreen) { elem.requestFullscreen(); }
+            else if (elem.webkitRequestFullscreen) { elem.webkitRequestFullscreen(); }
+        }
+
+        function searchGame() {
+            // This is a placeholder for search logic
+            let input = document.getElementById('gameSearch').value.toLowerCase();
+            console.log("Searching for: " + input);
         }
     </script>
 </body>
 </html>
+
