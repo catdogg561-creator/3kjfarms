@@ -6,211 +6,212 @@
     <title>Sigma_Trees Games</title>
     <style>
         :root {
-            --bg-color: #0a1a0a;
-            --card-bg: #142d14;
+            --bg-color: #050f05;
+            --card-bg: #102610;
             --accent: #2e8b57;
             --text: #e0eee0;
             --highlight: #4ade80;
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Segoe UI', sans-serif;
             background-color: var(--bg-color);
             color: var(--text);
-            margin: 0;
-            padding: 20px;
-            text-align: center;
+            margin: 0; padding: 20px; text-align: center;
+            overflow-x: hidden;
         }
 
-        header {
+        /* Game Display Box */
+        #game-display {
+            display: none;
+            flex-direction: column;
+            align-items: center;
             margin-bottom: 30px;
-        }
-
-        h1 {
-            color: var(--highlight);
-            font-size: 3rem;
-            text-shadow: 2px 2px 10px rgba(0,0,0,0.5);
-            margin-bottom: 10px;
-        }
-
-        #searchBar {
-            padding: 12px;
-            width: 60%;
-            max-width: 400px;
-            border-radius: 25px;
-            border: 2px solid var(--accent);
             background: #000;
-            color: white;
-            margin-bottom: 20px;
+            padding: 15px;
+            border: 2px solid var(--highlight);
+            border-radius: 10px;
         }
 
-        .stealth-btn {
-            background: #1a1a1a;
-            color: #555;
-            border: 1px solid #333;
-            padding: 5px 15px;
-            cursor: pointer;
-            border-radius: 5px;
+        iframe {
+            width: 90%;
+            height: 500px;
+            border: none;
+            background: #000;
+        }
+
+        .controls-hint {
+            color: #888;
             font-size: 0.8rem;
+            margin-top: 10px;
         }
 
-        .category-section {
-            margin-bottom: 40px;
+        /* UI Elements */
+        #searchBar {
+            padding: 12px; width: 60%; max-width: 400px;
+            border-radius: 25px; border: 2px solid var(--accent);
+            background: #000; color: white; margin: 20px 0;
         }
 
         .category-title {
-            text-align: left;
-            border-left: 5px solid var(--highlight);
-            padding-left: 15px;
-            margin-left: 10%;
-            color: var(--highlight);
-            text-transform: uppercase;
-            letter-spacing: 2px;
+            text-align: left; border-left: 5px solid var(--highlight);
+            padding-left: 15px; margin: 40px 10% 20px;
+            color: var(--highlight); text-transform: uppercase;
         }
 
         .game-grid {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 20px;
-            padding: 20px;
+            display: flex; flex-wrap: wrap; justify-content: center; gap: 15px;
         }
 
         .game-card {
             background-color: var(--card-bg);
             border: 1px solid var(--accent);
-            border-radius: 12px;
-            width: 180px;
-            padding: 20px;
-            transition: transform 0.3s, box-shadow 0.3s;
-            text-decoration: none;
-            color: var(--text);
+            border-radius: 8px; width: 150px; padding: 15px;
+            cursor: pointer; transition: 0.3s;
         }
 
         .game-card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 10px 20px rgba(0, 255, 0, 0.2);
-            border-color: var(--highlight);
+            background: var(--highlight); color: #000; transform: scale(1.05);
         }
 
+        /* Stealth Mode */
         #stealth-overlay {
-            display: none;
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: white;
-            color: black;
-            z-index: 9999;
-            padding-top: 100px;
-            text-align: center;
+            display: none; position: fixed; top: 0; left: 0; 
+            width: 100%; height: 100%; background: white;
+            color: black; z-index: 9999; padding: 50px; text-align: left;
             font-family: serif;
         }
 
-        footer {
-            margin-top: 50px;
-            font-size: 0.9rem;
-            color: var(--accent);
-            border-top: 1px solid var(--card-bg);
-            padding-top: 20px;
-        }
+        footer { margin-top: 50px; opacity: 0.6; }
     </style>
 </head>
 <body>
 
-    <div id="main-content">
-        <header>
-            <button class="stealth-btn" onclick="toggleStealth()">Stealth Mode (Esc)</button>
-            <h1>Sigma_Trees Games</h1>
-            <input type="text" id="searchBar" placeholder="Search games..." onkeyup="searchGames()">
-        </header>
+    <div id="main-ui">
+        <h1>Sigma_Trees Games</h1>
+        <p style="color: var(--highlight); font-size: 0.9rem;">
+            "U might have to click on a game once or twice for it to work"
+        </p>
 
-        <div id="game-container">
-            <!-- SHOOTERS -->
+        <!-- Search & Info -->
+        <input type="text" id="searchBar" placeholder="Search games..." onkeyup="searchGames()">
+        <p><small>Press <b>P</b> for Stealth Mode | Press <b>F</b> for Fullscreen | Hold <b>ESC</b> to close game</small></p>
+
+        <!-- The Game Box -->
+        <div id="game-display">
+            <h3 id="current-game-title" style="margin-top:0">Game Loading...</h3>
+            <iframe id="game-frame" src=""></iframe>
+            <div class="controls-hint">
+                <button onclick="toggleFullscreen()">Go Fullscreen (F)</button>
+                <span> Hold ESC for 2 seconds to exit </span>
+            </div>
+        </div>
+
+        <!-- Categories -->
+        <div id="categories-container">
             <div class="category-section">
-                <h2 class="category-title">Shooters</h2>
+                <h2 class="category-title">Action & Shooters</h2>
                 <div class="game-grid">
-                    <a href="https://krunker.io" class="game-card">Krunker</a>
-                    <a href="https://shellshock.io" class="game-card">Shell Shockers</a>
-                    <a href="https://craftnite.io" class="game-card">Craftnite.io</a>
+                    <div class="game-card" onclick="loadGame('Shell Shockers', 'https://shellshock.io')">Shell Shockers</div>
+                    <div class="game-card" onclick="loadGame('Krunker', 'https://krunker.io')">Krunker</div>
+                    <div class="game-card" onclick="loadGame('Craftnite', 'https://craftnite.io')">Craftnite.io</div>
                 </div>
             </div>
 
-            <!-- SURVIVAL & EVOLUTION -->
             <div class="category-section">
-                <h2 class="category-title">Survival / Evolution</h2>
+                <h2 class="category-title">Evolution & Survival</h2>
                 <div class="game-grid">
-                    <a href="https://mope.io" class="game-card">Mope.io</a>
-                    <a href="https://flyordie.io" class="game-card">FlyOrDie.io</a>
-                    <a href="https://littlebigsnake.com" class="game-card">Little Big Snake</a>
+                    <div class="game-card" onclick="loadGame('Mope.io', 'https://mope.io')">Mope.io</div>
+                    <div class="game-card" onclick="loadGame('FlyOrDie', 'https://flyordie.io')">FlyOrDie.io</div>
+                    <div class="game-card" onclick="loadGame('Little Big Snake', 'https://littlebigsnake.com')">Little Big Snake</div>
                 </div>
             </div>
 
-            <!-- MULTIPLAYER IO -->
             <div class="category-section">
-                <h2 class="category-title">Multiplayer .IO</h2>
+                <h2 class="category-title">Multiplayer & Misc</h2>
                 <div class="game-grid">
-                    <a href="https://krew.io" class="game-card">Krew.io</a>
-                    <a href="https://bloxd.io" class="game-card">Bloxd.io</a>
-                    <a href="https://hole-io.com" class="game-card">Hole.io</a>
-                </div>
-            </div>
-
-            <!-- SKILL & ARCADE -->
-            <div class="category-section">
-                <h2 class="category-title">Skill & Arcade</h2>
-                <div class="game-grid">
-                    <a href="https://geometrydashfullversion.io" class="game-card">Geometry Dash</a>
-                    <a href="https://dashmentry.io" class="game-card">Dashmentry.io</a>
+                    <div class="game-card" onclick="loadGame('Krew.io', 'https://krew.io')">Krew.io</div>
+                    <div class="game-card" onclick="loadGame('Bloxd.io', 'https://bloxd.io')">Bloxd.io</div>
+                    <div class="game-card" onclick="loadGame('Hole.io', 'https://hole-io.com')">Hole.io</div>
+                    <div class="game-card" onclick="loadGame('Geometry Dash', 'https://geometrydashfullversion.io')">Geometry Dash</div>
+                    <div class="game-card" onclick="loadGame('Dashmentry', 'https://dashmentry.io')">Dashmentry.io</div>
                 </div>
             </div>
         </div>
 
-        <footer>
-            Version 1.15
-        </footer>
+        <footer>Version 1.15</footer>
     </div>
 
-    <!-- STEALTH MODE OVERLAY -->
-    <div id="stealth-overlay" onclick="toggleStealth()">
-        <div style="max-width: 600px; margin: 0 auto; text-align: left; padding: 20px;">
-            <p><strong>Assignment 4: Calculus Integration</strong></p>
-            <p id="math-problem"></p>
-            <p>Show all work. Use the integration by parts method where applicable.</p>
-        </div>
+    <!-- Stealth Overlay -->
+    <div id="stealth-overlay">
+        <h1>Worksheet: Quadratic Equations</h1>
+        <p id="math-prob"></p>
+        <p>Solve for x and show all steps. Failure to provide work will result in point deductions.</p>
     </div>
 
     <script>
+        const gameDisplay = document.getElementById('game-display');
+        const gameFrame = document.getElementById('game-frame');
+        const gameTitle = document.getElementById('current-game-title');
+        let escTimer;
+
+        // Load game into the box
+        function loadGame(name, url) {
+            gameTitle.innerText = name;
+            gameFrame.src = url;
+            gameDisplay.style.display = "flex";
+            window.scrollTo({top: 0, behavior: 'smooth'});
+        }
+
+        // Search Logic
         function searchGames() {
             let input = document.getElementById('searchBar').value.toLowerCase();
-            let cards = document.getElementsByClassName('game-card');
-            
-            for (let i = 0; i < cards.length; i++) {
-                if (cards[i].innerText.toLowerCase().includes(input)) {
-                    cards[i].style.display = "block";
+            let cards = document.querySelectorAll('.game-card');
+            cards.forEach(card => {
+                card.style.display = card.innerText.toLowerCase().includes(input) ? "block" : "none";
+            });
+        }
+
+        // Fullscreen Logic
+        function toggleFullscreen() {
+            if (!document.fullscreenElement) {
+                gameFrame.requestFullscreen().catch(err => {
+                    alert(`Error: ${err.message}`);
+                });
+            }
+        }
+
+        // Keyboard Shortcuts
+        window.addEventListener('keydown', (e) => {
+            // Stealth Mode (P)
+            if (e.key.toLowerCase() === 'p') {
+                const stealth = document.getElementById('stealth-overlay');
+                const math = document.getElementById('math-prob');
+                if (stealth.style.display === "block") {
+                    stealth.style.display = "none";
                 } else {
-                    cards[i].style.display = "none";
+                    math.innerText = `Problem: ${Math.floor(Math.random()*50)}x² + ${Math.floor(Math.random()*100)} = 0`;
+                    stealth.style.display = "block";
                 }
             }
-        }
 
-        function toggleStealth() {
-            const overlay = document.getElementById('stealth-overlay');
-            const mathBox = document.getElementById('math-problem');
-            
-            if (overlay.style.display === "block") {
-                overlay.style.display = "none";
-            } else {
-                // Generate a random math problem
-                const num1 = Math.floor(Math.random() * 100);
-                const num2 = Math.floor(Math.random() * 100);
-                mathBox.innerHTML = `Question 1: Solve for x where f(x) = ∫(${num1}x^2 + ${num2}x) dx.`;
-                overlay.style.display = "block";
+            // Fullscreen (F)
+            if (e.key.toLowerCase() === 'f' && gameDisplay.style.display === "flex") {
+                toggleFullscreen();
             }
-        }
 
-        // Shortcut key for Stealth Mode (Escape key)
-        window.addEventListener('keydown', function(e) {
+            // Hold ESC for 2 seconds to Close
             if (e.key === "Escape") {
-                toggleStealth();
+                escTimer = setTimeout(() => {
+                    gameFrame.src = "";
+                    gameDisplay.style.display = "none";
+                }, 2000);
+            }
+        });
+
+        window.addEventListener('keyup', (e) => {
+            if (e.key === "Escape") {
+                clearTimeout(escTimer);
             }
         });
     </script>
