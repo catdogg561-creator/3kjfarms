@@ -1,8 +1,9 @@
+ (cd "$(git rev-parse --show-toplevel)" && git apply --3way <<'EOF' 
 diff --git a/index.html b/index.html
-index 3fe2fe26b11b4dd9132c6863803d8fbc09b3543f..8687c55c140ee1001d63be2773d70863885b40fa 100644
+index 3fe2fe26b11b4dd9132c6863803d8fbc09b3543f..3b18e4088a856f3a58da7f5009854d85806c74ee 100644
 --- a/index.html
 +++ b/index.html
-@@ -1,114 +1,358 @@
+@@ -1,114 +1,456 @@
  <!DOCTYPE html>
  <html lang="en">
  <head>
@@ -43,7 +44,6 @@ index 3fe2fe26b11b4dd9132c6863803d8fbc09b3543f..8687c55c140ee1001d63be2773d70863
 +  <style>
 +    :root {
 +      --bg: #03170f;
-+      --bg-soft: #06271a;
 +      --card: #0a3a28;
 +      --card-hover: #0f5238;
 +      --text: #e8fff4;
@@ -105,7 +105,8 @@ index 3fe2fe26b11b4dd9132c6863803d8fbc09b3543f..8687c55c140ee1001d63be2773d70863
 +    }
 +
 +    .search-wrap,
-+    .proxy-controls {
++    .proxy-controls,
++    .top-actions {
 +      display: flex;
 +      gap: 0.55rem;
 +      flex-wrap: wrap;
@@ -182,6 +183,7 @@ index 3fe2fe26b11b4dd9132c6863803d8fbc09b3543f..8687c55c140ee1001d63be2773d70863
 +      border-radius: 999px;
 +      padding: 0.2rem 0.55rem;
 +      width: fit-content;
++      text-transform: capitalize;
 +    }
 +
 +    .game-title {
@@ -226,27 +228,75 @@ index 3fe2fe26b11b4dd9132c6863803d8fbc09b3543f..8687c55c140ee1001d63be2773d70863
 +      margin-top: 0.45rem;
 +      font-size: 0.9rem;
 +    }
++
++    #stealthOverlay {
++      position: fixed;
++      inset: 0;
++      display: none;
++      z-index: 9999;
++      background: linear-gradient(145deg, #f6f7fb, #ecf0ff);
++      color: #111;
++      align-items: center;
++      justify-content: center;
++      text-align: left;
++      padding: 1rem;
++    }
++
++    #stealthOverlay.active {
++      display: flex;
++    }
++
++    .stealth-card {
++      width: min(740px, 95vw);
++      background: #fff;
++      border: 1px solid #d5dbf0;
++      border-radius: 16px;
++      box-shadow: 0 20px 40px rgba(20, 31, 68, 0.15);
++      padding: 1.25rem;
++    }
++
++    .stealth-card h2 {
++      margin: 0 0 0.6rem;
++      font-size: 1.3rem;
++      color: #24306b;
++    }
++
++    .stealth-q {
++      margin: 0.35rem 0 0.8rem;
++      font-size: 1.05rem;
++      font-weight: 600;
++    }
++
++    .stealth-help {
++      margin: 0;
++      color: #4f5e9f;
++      font-size: 0.9rem;
++    }
++
++    .stealth-btn {
++      background: #3556dd;
++      border-color: #3556dd;
++    }
 +  </style>
  </head>
  <body>
-+  <header class="header">
-+    <h1>Sigma_Trees Games</h1>
-+    <p class="subtitle">Dark green arcade hub • searchable • categorized • fullscreen-ready</p>
-+  </header>
++  <div id="stealthOverlay" aria-hidden="true">
++    <article class="stealth-card">
++      <h2>Weekly Math Review Sheet</h2>
++      <p class="stealth-q" id="stealthQuestion">Solve: 12 × 7</p>
++      <p class="stealth-help">Press <b>P</b> to exit stealth mode.</p>
++    </article>
++  </div>
  
 -<div id="stealth-overlay">
 -    <h2>Weekly Calculus Assessment</h2>
 -    <p id="math-q">Solve: ∫ (3x² + 2x) dx</p>
 -</div>
-+  <main class="container">
-+    <section class="panel controls">
-+      <div class="search-wrap">
-+        <input id="searchInput" type="text" placeholder="Search games..." />
-+      </div>
- 
+-
 -<div class="header">
 -    <img src="https://ibb.co" class="avatar">
--    <h1>Sigma_Trees Games</h1>
++  <header class="header">
+     <h1>Sigma_Trees Games</h1>
 -    <p>v1.1.8 | Ready for Research</p>
 -</div>
 -
@@ -281,6 +331,19 @@ index 3fe2fe26b11b4dd9132c6863803d8fbc09b3543f..8687c55c140ee1001d63be2773d70863
 -    const blacklist = ["porn", "xvideo", "hub", "hentai", "sex"];
 -
 -    function load(url) { document.getElementById('main-frame').src = url; }
++    <p class="subtitle">Dark green arcade hub • searchable • categorized • fullscreen-ready</p>
++  </header>
++
++  <main class="container">
++    <section class="panel controls">
++      <div class="top-actions">
++        <button id="stealthBtn" class="stealth-btn">Stealth Mode (P)</button>
++      </div>
++
++      <div class="search-wrap">
++        <input id="searchInput" type="text" placeholder="Search games..." />
++      </div>
++
 +      <div class="cat-row" id="categoryRow">
 +        <button class="cat-btn active" data-category="all">All</button>
 +        <button class="cat-btn" data-category="shooter">Shooter</button>
@@ -290,11 +353,7 @@ index 3fe2fe26b11b4dd9132c6863803d8fbc09b3543f..8687c55c140ee1001d63be2773d70863
 +        <button class="cat-btn" data-category="platform">Platform</button>
 +      </div>
 +    </section>
- 
--    function launchProxy() {
--        let val = document.getElementById('urlInput').value.toLowerCase();
--        if (blacklist.some(w => val.includes(w))) { alert("Site Blocked by Sigma_Trees"); return; }
--        load(val.includes('http') ? val : "https://" + val);
++
 +    <section class="panel">
 +      <h2 style="margin:0 0 .5rem; font-size:1.1rem;">Games</h2>
 +      <div id="gameGrid" class="game-grid"></div>
@@ -339,6 +398,17 @@ index 3fe2fe26b11b4dd9132c6863803d8fbc09b3543f..8687c55c140ee1001d63be2773d70863
 +      "nude", "violence", "gore", "hate", "nazi", "terror"
 +    ];
 +
++    const stealthQuestions = [
++      "Solve: 36 ÷ 6",
++      "Solve: 9 × 8",
++      "Find x: x + 14 = 29",
++      "Simplify: 3(2x + 4)",
++      "Solve: 2² + 5²",
++      "Find slope from points (1,2) and (3,6)",
++      "Solve: 15% of 80",
++      "What is the value of π rounded to 2 decimals?"
++    ];
++
 +    const searchInput = document.getElementById("searchInput");
 +    const gameGrid = document.getElementById("gameGrid");
 +    const nowPlaying = document.getElementById("nowPlaying");
@@ -346,6 +416,8 @@ index 3fe2fe26b11b4dd9132c6863803d8fbc09b3543f..8687c55c140ee1001d63be2773d70863
 +    const categoryButtons = [...document.querySelectorAll(".cat-btn")];
 +    const proxyInput = document.getElementById("proxyInput");
 +    const proxyMessage = document.getElementById("proxyMessage");
++    const stealthOverlay = document.getElementById("stealthOverlay");
++    const stealthQuestion = document.getElementById("stealthQuestion");
 +
 +    let selectedCategory = "all";
 +
@@ -376,11 +448,8 @@ index 3fe2fe26b11b4dd9132c6863803d8fbc09b3543f..8687c55c140ee1001d63be2773d70863
 +        .filter(g => selectedCategory === "all" || g.category === selectedCategory)
 +        .filter(g => g.name.toLowerCase().includes(q))
 +        .forEach(g => gameGrid.appendChild(gameCard(g)));
-     }
- 
--    function toggleStealth() {
--        let over = document.getElementById('stealth-overlay');
--        over.style.display = (over.style.display === 'flex') ? 'none' : 'flex';
++    }
++
 +    function normalizeToUrl(input) {
 +      const value = input.trim();
 +      if (!value) return "";
@@ -390,28 +459,17 @@ index 3fe2fe26b11b4dd9132c6863803d8fbc09b3543f..8687c55c140ee1001d63be2773d70863
 +
 +      const safeQuery = encodeURIComponent(`${value} safe search`);
 +      return `https://duckduckgo.com/?kp=1&kl=us-en&q=${safeQuery}`;
-     }
- 
--    // FIXED: This now targets the entire screen
--    function deepFullscreen() {
--        let elem = document.getElementById('game-wrapper');
--        if (elem.requestFullscreen) elem.requestFullscreen();
--        else if (elem.webkitRequestFullscreen) elem.webkitRequestFullscreen();
++    }
++
 +    function blocked(value) {
 +      const v = value.toLowerCase();
 +      return blockedTerms.some(term => v.includes(term));
-     }
++    }
  
--    // Key Listeners
--    let escTimer;
--    document.addEventListener('keydown', (e) => {
--        if (e.key.toLowerCase() === 'p') toggleStealth();
--        if (e.key === "Escape") {
--            escTimer = setTimeout(() => {
--                if (document.fullscreenElement) document.exitFullscreen();
--            }, 2000); // Must hold for 2 seconds
--        }
-+    function launchProxy() {
+     function launchProxy() {
+-        let val = document.getElementById('urlInput').value.toLowerCase();
+-        if (blacklist.some(w => val.includes(w))) { alert("Site Blocked by Sigma_Trees"); return; }
+-        load(val.includes('http') ? val : "https://" + val);
 +      const raw = proxyInput.value;
 +      proxyMessage.textContent = "";
 +
@@ -429,6 +487,43 @@ index 3fe2fe26b11b4dd9132c6863803d8fbc09b3543f..8687c55c140ee1001d63be2773d70863
 +      play(url, "Browser Proxy");
 +    }
 +
++    function randomStealthQuestion() {
++      const idx = Math.floor(Math.random() * stealthQuestions.length);
++      stealthQuestion.textContent = stealthQuestions[idx];
+     }
+ 
+     function toggleStealth() {
+-        let over = document.getElementById('stealth-overlay');
+-        over.style.display = (over.style.display === 'flex') ? 'none' : 'flex';
+-    }
+-
+-    // FIXED: This now targets the entire screen
+-    function deepFullscreen() {
+-        let elem = document.getElementById('game-wrapper');
+-        if (elem.requestFullscreen) elem.requestFullscreen();
+-        else if (elem.webkitRequestFullscreen) elem.webkitRequestFullscreen();
+-    }
+-
+-    // Key Listeners
+-    let escTimer;
+-    document.addEventListener('keydown', (e) => {
+-        if (e.key.toLowerCase() === 'p') toggleStealth();
+-        if (e.key === "Escape") {
+-            escTimer = setTimeout(() => {
+-                if (document.fullscreenElement) document.exitFullscreen();
+-            }, 2000); // Must hold for 2 seconds
+-        }
++      const isOpen = stealthOverlay.classList.contains("active");
++      if (isOpen) {
++        stealthOverlay.classList.remove("active");
++        stealthOverlay.setAttribute("aria-hidden", "true");
++      } else {
++        randomStealthQuestion();
++        stealthOverlay.classList.add("active");
++        stealthOverlay.setAttribute("aria-hidden", "false");
++      }
++    }
++
 +    categoryButtons.forEach(btn => {
 +      btn.addEventListener("click", () => {
 +        selectedCategory = btn.dataset.category;
@@ -436,10 +531,8 @@ index 3fe2fe26b11b4dd9132c6863803d8fbc09b3543f..8687c55c140ee1001d63be2773d70863
 +        btn.classList.add("active");
 +        renderGames();
 +      });
-     });
- 
--    document.addEventListener('keyup', (e) => { if (e.key === "Escape") clearTimeout(escTimer); });
--</script>
++    });
++
 +    searchInput.addEventListener("input", renderGames);
 +    document.getElementById("openProxyBtn").addEventListener("click", launchProxy);
 +    proxyInput.addEventListener("keydown", e => {
@@ -450,6 +543,14 @@ index 3fe2fe26b11b4dd9132c6863803d8fbc09b3543f..8687c55c140ee1001d63be2773d70863
 +      const target = frame;
 +      if (target.requestFullscreen) target.requestFullscreen();
 +      else if (target.webkitRequestFullscreen) target.webkitRequestFullscreen();
+     });
+ 
+-    document.addEventListener('keyup', (e) => { if (e.key === "Escape") clearTimeout(escTimer); });
+-</script>
++    document.getElementById("stealthBtn").addEventListener("click", toggleStealth);
++    document.addEventListener("keydown", event => {
++      if (event.key.toLowerCase() === "p") toggleStealth();
++      if (event.key === "Escape" && stealthOverlay.classList.contains("active")) toggleStealth();
 +    });
 +
 +    renderGames();
@@ -457,5 +558,6 @@ index 3fe2fe26b11b4dd9132c6863803d8fbc09b3543f..8687c55c140ee1001d63be2773d70863
  </body>
  </html>
 -
-
-
+ 
+EOF
+)
