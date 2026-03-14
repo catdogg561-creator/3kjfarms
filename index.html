@@ -1,114 +1,461 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Sigma_Trees | Advanced Math</title>
-    <style>
-        :root { --bg: #051d14; --text: #e2e8f0; --accent: #10b981; --card: #064e3b; }
-        body { background: var(--bg); color: var(--text); font-family: sans-serif; margin: 0; text-align: center; }
-        
-        /* Header & Avatar */
-        .header { padding: 20px; border-bottom: 3px solid var(--accent); background: rgba(0,0,0,0.3); }
-        .avatar { width: 70px; height: 70px; border-radius: 50%; border: 2px solid var(--accent); }
-        
-        /* Categories */
-        .nav { display: flex; justify-content: center; gap: 10px; padding: 15px; flex-wrap: wrap; }
-        .btn { background: var(--card); border: 2px solid var(--accent); color: white; padding: 8px 15px; border-radius: 10px; cursor: pointer; font-weight: bold; }
-        .btn:hover { background: var(--accent); }
+diff --git a/index.html b/index.html
+index 3fe2fe26b11b4dd9132c6863803d8fbc09b3543f..8687c55c140ee1001d63be2773d70863885b40fa 100644
+--- a/index.html
++++ b/index.html
+@@ -1,114 +1,358 @@
+ <!DOCTYPE html>
+ <html lang="en">
+ <head>
+-    <meta charset="UTF-8">
+-    <title>Sigma_Trees | Advanced Math</title>
+-    <style>
+-        :root { --bg: #051d14; --text: #e2e8f0; --accent: #10b981; --card: #064e3b; }
+-        body { background: var(--bg); color: var(--text); font-family: sans-serif; margin: 0; text-align: center; }
+-        
+-        /* Header & Avatar */
+-        .header { padding: 20px; border-bottom: 3px solid var(--accent); background: rgba(0,0,0,0.3); }
+-        .avatar { width: 70px; height: 70px; border-radius: 50%; border: 2px solid var(--accent); }
+-        
+-        /* Categories */
+-        .nav { display: flex; justify-content: center; gap: 10px; padding: 15px; flex-wrap: wrap; }
+-        .btn { background: var(--card); border: 2px solid var(--accent); color: white; padding: 8px 15px; border-radius: 10px; cursor: pointer; font-weight: bold; }
+-        .btn:hover { background: var(--accent); }
+-
+-        /* Proxy Bar */
+-        .proxy-bar { margin: 20px; }
+-        #urlInput { width: 50%; padding: 10px; border-radius: 20px; border: 2px solid var(--accent); background: #000; color: #fff; }
+-
+-        /* Game Grid */
+-        .grid { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; padding: 20px; }
+-        .card { background: var(--card); width: 100px; padding: 15px; border-radius: 12px; cursor: pointer; transition: 0.2s; }
+-        .card:hover { transform: scale(1.05); border: 1px solid var(--accent); }
+-
+-        /* The Game Box */
+-        #game-wrapper { width: 90%; max-width: 900px; height: 550px; margin: 20px auto; border: 4px solid var(--accent); border-radius: 15px; overflow: hidden; background: #000; }
+-        iframe { width: 100%; height: 100%; border: none; }
+-
+-        /* Stealth Screen */
+-        #stealth-overlay { display: none; position: fixed; inset: 0; background: white; color: black; z-index: 10000; justify-content: center; align-items: center; font-size: 2rem; flex-direction: column; }
+-    </style>
++  <meta charset="UTF-8" />
++  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
++  <title>Sigma_Trees Games</title>
++  <style>
++    :root {
++      --bg: #03170f;
++      --bg-soft: #06271a;
++      --card: #0a3a28;
++      --card-hover: #0f5238;
++      --text: #e8fff4;
++      --muted: #a8d7bf;
++      --accent: #30d184;
++      --danger: #ff6b6b;
++      --border: #1d7b56;
++    }
++
++    * { box-sizing: border-box; }
++
++    body {
++      margin: 0;
++      font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
++      background: radial-gradient(circle at top, #0a2a1d, var(--bg));
++      color: var(--text);
++    }
++
++    .container {
++      width: min(1200px, 92%);
++      margin: 0 auto 2rem;
++    }
++
++    .header {
++      text-align: center;
++      padding: 1.6rem 1rem 1rem;
++      border-bottom: 2px solid var(--border);
++      background: rgba(0, 0, 0, 0.2);
++      position: sticky;
++      top: 0;
++      z-index: 5;
++      backdrop-filter: blur(6px);
++    }
++
++    h1 {
++      margin: 0;
++      font-size: clamp(1.7rem, 3vw, 2.3rem);
++      letter-spacing: 0.04em;
++    }
++
++    .subtitle {
++      margin: 0.35rem 0 0;
++      color: var(--muted);
++      font-size: 0.95rem;
++    }
++
++    .panel {
++      background: rgba(0, 0, 0, 0.18);
++      border: 1px solid var(--border);
++      border-radius: 14px;
++      padding: 1rem;
++      margin-top: 1rem;
++    }
++
++    .controls {
++      display: grid;
++      gap: 0.8rem;
++      grid-template-columns: 1fr;
++    }
++
++    .search-wrap,
++    .proxy-controls {
++      display: flex;
++      gap: 0.55rem;
++      flex-wrap: wrap;
++    }
++
++    input[type="text"] {
++      flex: 1;
++      min-width: 220px;
++      background: #01150c;
++      color: var(--text);
++      border: 1px solid var(--border);
++      border-radius: 10px;
++      padding: 0.75rem 0.9rem;
++      outline: none;
++    }
++
++    input[type="text"]:focus {
++      border-color: var(--accent);
++      box-shadow: 0 0 0 2px rgba(48, 209, 132, 0.2);
++    }
++
++    button {
++      background: var(--card);
++      color: white;
++      border: 1px solid var(--border);
++      border-radius: 10px;
++      padding: 0.72rem 0.95rem;
++      cursor: pointer;
++      font-weight: 600;
++    }
++
++    button:hover { background: var(--card-hover); }
++
++    .cat-row {
++      display: flex;
++      flex-wrap: wrap;
++      gap: 0.45rem;
++      margin-top: 0.5rem;
++    }
++
++    .cat-btn.active {
++      background: var(--accent);
++      color: #012013;
++      border-color: var(--accent);
++    }
++
++    .game-grid {
++      margin-top: 1rem;
++      display: grid;
++      gap: 0.65rem;
++      grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
++    }
++
++    .game-card {
++      background: linear-gradient(160deg, #0a3323, #082a1d);
++      border: 1px solid var(--border);
++      border-radius: 12px;
++      padding: 0.85rem;
++      display: flex;
++      flex-direction: column;
++      gap: 0.6rem;
++      transition: 0.18s ease;
++    }
++
++    .game-card:hover {
++      transform: translateY(-2px);
++      border-color: var(--accent);
++    }
++
++    .tag {
++      font-size: 0.75rem;
++      color: var(--muted);
++      border: 1px solid var(--border);
++      border-radius: 999px;
++      padding: 0.2rem 0.55rem;
++      width: fit-content;
++    }
++
++    .game-title {
++      margin: 0;
++      font-size: 1rem;
++    }
++
++    .player {
++      margin-top: 1rem;
++    }
++
++    .player-head {
++      display: flex;
++      justify-content: space-between;
++      align-items: center;
++      gap: 0.75rem;
++      margin-bottom: 0.65rem;
++      flex-wrap: wrap;
++    }
++
++    .status { color: var(--muted); font-size: 0.9rem; }
++
++    #game-frame {
++      width: 100%;
++      height: 68vh;
++      min-height: 430px;
++      background: #000;
++      border-radius: 12px;
++      border: 2px solid var(--border);
++    }
++
++    .warning {
++      margin-top: 0.55rem;
++      color: #ffd9a5;
++      font-size: 0.88rem;
++    }
++
++    .blocked {
++      color: var(--danger);
++      font-weight: 600;
++      min-height: 1.2em;
++      margin-top: 0.45rem;
++      font-size: 0.9rem;
++    }
++  </style>
+ </head>
+ <body>
++  <header class="header">
++    <h1>Sigma_Trees Games</h1>
++    <p class="subtitle">Dark green arcade hub • searchable • categorized • fullscreen-ready</p>
++  </header>
+ 
+-<div id="stealth-overlay">
+-    <h2>Weekly Calculus Assessment</h2>
+-    <p id="math-q">Solve: ∫ (3x² + 2x) dx</p>
+-</div>
++  <main class="container">
++    <section class="panel controls">
++      <div class="search-wrap">
++        <input id="searchInput" type="text" placeholder="Search games..." />
++      </div>
+ 
+-<div class="header">
+-    <img src="https://ibb.co" class="avatar">
+-    <h1>Sigma_Trees Games</h1>
+-    <p>v1.1.8 | Ready for Research</p>
+-</div>
+-
+-<div class="nav">
+-    <button class="btn" style="background:#1a73e8" onclick="toggleStealth()">STEALTH (P)</button>
+-    <button class="btn" style="background:#d97706" onclick="deepFullscreen()">TRUE FULLSCREEN</button>
+-</div>
+-
+-<div class="proxy-bar">
+-    <input type="text" id="urlInput" placeholder="Enter URL to Proxy (e.g. google.com)">
+-    <button class="btn" onclick="launchProxy()">GO</button>
+-</div>
+-
+-<div class="grid">
+-    <div class="card" onclick="load('https://krew.io')">⛵<span>Krew.io</span></div>
+-    <div class="card" onclick="load('https://craftnite.io')">⛏️<span>Craftnite</span></div>
+-    <div class="card" onclick="load('https://bloxd.io')">🧱<span>Bloxd.io</span></div>
+-    <div class="card" onclick="load('https://geometrydashfullversion.io')">🟦<span>GD Full</span></div>
+-    <div class="card" onclick="load('https://github.io')">🐒<span>Monkey Mart</span></div>
+-    <div class="card" onclick="load('https://shellshock.io')">🥚<span>Shell Shock</span></div>
+-    <div class="card" onclick="load('https://krunker.io')">🎯<span>Krunker</span></div>
+-    <div class="card" onclick="load('https://github.io')">🔫<span>Gun Mayhem</span></div>
+-    <div class="card" onclick="load('https://mope.io')">🐷<span>Mope.io</span></div>
+-    <div class="card" onclick="load('https://flyordie.io')">🪰<span>FlyOrDie</span></div>
+-</div>
+-
+-<div id="game-wrapper">
+-    <iframe id="main-frame" src="about:blank" allow="fullscreen"></iframe>
+-</div>
+-
+-<script>
+-    const blacklist = ["porn", "xvideo", "hub", "hentai", "sex"];
+-
+-    function load(url) { document.getElementById('main-frame').src = url; }
++      <div class="cat-row" id="categoryRow">
++        <button class="cat-btn active" data-category="all">All</button>
++        <button class="cat-btn" data-category="shooter">Shooter</button>
++        <button class="cat-btn" data-category="survival">Survival</button>
++        <button class="cat-btn" data-category="snake">Snake</button>
++        <button class="cat-btn" data-category="sandbox">Sandbox</button>
++        <button class="cat-btn" data-category="platform">Platform</button>
++      </div>
++    </section>
+ 
+-    function launchProxy() {
+-        let val = document.getElementById('urlInput').value.toLowerCase();
+-        if (blacklist.some(w => val.includes(w))) { alert("Site Blocked by Sigma_Trees"); return; }
+-        load(val.includes('http') ? val : "https://" + val);
++    <section class="panel">
++      <h2 style="margin:0 0 .5rem; font-size:1.1rem;">Games</h2>
++      <div id="gameGrid" class="game-grid"></div>
++    </section>
++
++    <section class="panel player">
++      <div class="player-head">
++        <span id="nowPlaying" class="status">Now playing: none selected</span>
++        <button id="fullscreenBtn">Fullscreen</button>
++      </div>
++      <iframe id="game-frame" src="about:blank" allowfullscreen title="Game / Browser Frame"></iframe>
++    </section>
++
++    <section class="panel">
++      <h2 style="margin:0 0 .5rem; font-size:1.1rem;">Browser Proxy (Safe Mode)</h2>
++      <div class="proxy-controls">
++        <input id="proxyInput" type="text" placeholder="Search or enter a URL (example: wikipedia.org)" />
++        <button id="openProxyBtn">Open</button>
++      </div>
++      <div id="proxyMessage" class="blocked"></div>
++      <p class="warning">Blocked terms include explicit/adult content and violent-hate terms. SafeSearch is added for major engines.</p>
++    </section>
++  </main>
++
++  <script>
++    const games = [
++      { name: "Krew.io", category: "survival", url: "https://krew.io" },
++      { name: "Mope.io", category: "survival", url: "https://mope.io" },
++      { name: "Krunker.io", category: "shooter", url: "https://krunker.io" },
++      { name: "Shell Shockers", category: "shooter", url: "https://shellshock.io" },
++      { name: "Little Big Snake", category: "snake", url: "https://littlebigsnake.com" },
++      { name: "Gun Mayhem", category: "shooter", url: "https://www.crazygames.com/game/gun-mayhem-2" },
++      { name: "FlyOrDie.io", category: "survival", url: "https://flyordie.io" },
++      { name: "Craftnite.io", category: "sandbox", url: "https://craftnite.io" },
++      { name: "Bloxd.io", category: "sandbox", url: "https://bloxd.io" },
++      { name: "Minecraft Classic", category: "sandbox", url: "https://classic.minecraft.net" },
++      { name: "Geometry Dash Full Version", category: "platform", url: "https://geometrydashfullversion.io" }
++    ];
++
++    const blockedTerms = [
++      "porn", "sex", "hentai", "xvideo", "xnxx", "redtube", "nsfw", "escort",
++      "nude", "violence", "gore", "hate", "nazi", "terror"
++    ];
++
++    const searchInput = document.getElementById("searchInput");
++    const gameGrid = document.getElementById("gameGrid");
++    const nowPlaying = document.getElementById("nowPlaying");
++    const frame = document.getElementById("game-frame");
++    const categoryButtons = [...document.querySelectorAll(".cat-btn")];
++    const proxyInput = document.getElementById("proxyInput");
++    const proxyMessage = document.getElementById("proxyMessage");
++
++    let selectedCategory = "all";
++
++    function play(url, title) {
++      frame.src = url;
++      nowPlaying.textContent = `Now playing: ${title}`;
++    }
++
++    function gameCard(game) {
++      const card = document.createElement("article");
++      card.className = "game-card";
++      card.dataset.category = game.category;
++      card.dataset.name = game.name.toLowerCase();
++      card.innerHTML = `
++        <span class="tag">${game.category}</span>
++        <h3 class="game-title">${game.name}</h3>
++        <button>Play</button>
++      `;
++      card.querySelector("button").addEventListener("click", () => play(game.url, game.name));
++      return card;
++    }
++
++    function renderGames() {
++      gameGrid.innerHTML = "";
++      const q = searchInput.value.trim().toLowerCase();
++
++      games
++        .filter(g => selectedCategory === "all" || g.category === selectedCategory)
++        .filter(g => g.name.toLowerCase().includes(q))
++        .forEach(g => gameGrid.appendChild(gameCard(g)));
+     }
+ 
+-    function toggleStealth() {
+-        let over = document.getElementById('stealth-overlay');
+-        over.style.display = (over.style.display === 'flex') ? 'none' : 'flex';
++    function normalizeToUrl(input) {
++      const value = input.trim();
++      if (!value) return "";
++
++      if (value.startsWith("http://") || value.startsWith("https://")) return value;
++      if (value.includes(".") && !value.includes(" ")) return `https://${value}`;
++
++      const safeQuery = encodeURIComponent(`${value} safe search`);
++      return `https://duckduckgo.com/?kp=1&kl=us-en&q=${safeQuery}`;
+     }
+ 
+-    // FIXED: This now targets the entire screen
+-    function deepFullscreen() {
+-        let elem = document.getElementById('game-wrapper');
+-        if (elem.requestFullscreen) elem.requestFullscreen();
+-        else if (elem.webkitRequestFullscreen) elem.webkitRequestFullscreen();
++    function blocked(value) {
++      const v = value.toLowerCase();
++      return blockedTerms.some(term => v.includes(term));
+     }
+ 
+-    // Key Listeners
+-    let escTimer;
+-    document.addEventListener('keydown', (e) => {
+-        if (e.key.toLowerCase() === 'p') toggleStealth();
+-        if (e.key === "Escape") {
+-            escTimer = setTimeout(() => {
+-                if (document.fullscreenElement) document.exitFullscreen();
+-            }, 2000); // Must hold for 2 seconds
+-        }
++    function launchProxy() {
++      const raw = proxyInput.value;
++      proxyMessage.textContent = "";
++
++      if (!raw.trim()) {
++        proxyMessage.textContent = "Type a website or search phrase first.";
++        return;
++      }
++
++      if (blocked(raw)) {
++        proxyMessage.textContent = "Blocked: this search/site is not allowed on Sigma_Trees Games.";
++        return;
++      }
++
++      const url = normalizeToUrl(raw);
++      play(url, "Browser Proxy");
++    }
++
++    categoryButtons.forEach(btn => {
++      btn.addEventListener("click", () => {
++        selectedCategory = btn.dataset.category;
++        categoryButtons.forEach(b => b.classList.remove("active"));
++        btn.classList.add("active");
++        renderGames();
++      });
+     });
+ 
+-    document.addEventListener('keyup', (e) => { if (e.key === "Escape") clearTimeout(escTimer); });
+-</script>
++    searchInput.addEventListener("input", renderGames);
++    document.getElementById("openProxyBtn").addEventListener("click", launchProxy);
++    proxyInput.addEventListener("keydown", e => {
++      if (e.key === "Enter") launchProxy();
++    });
++
++    document.getElementById("fullscreenBtn").addEventListener("click", () => {
++      const target = frame;
++      if (target.requestFullscreen) target.requestFullscreen();
++      else if (target.webkitRequestFullscreen) target.webkitRequestFullscreen();
++    });
++
++    renderGames();
++  </script>
+ </body>
+ </html>
+-
 
-        /* Proxy Bar */
-        .proxy-bar { margin: 20px; }
-        #urlInput { width: 50%; padding: 10px; border-radius: 20px; border: 2px solid var(--accent); background: #000; color: #fff; }
-
-        /* Game Grid */
-        .grid { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; padding: 20px; }
-        .card { background: var(--card); width: 100px; padding: 15px; border-radius: 12px; cursor: pointer; transition: 0.2s; }
-        .card:hover { transform: scale(1.05); border: 1px solid var(--accent); }
-
-        /* The Game Box */
-        #game-wrapper { width: 90%; max-width: 900px; height: 550px; margin: 20px auto; border: 4px solid var(--accent); border-radius: 15px; overflow: hidden; background: #000; }
-        iframe { width: 100%; height: 100%; border: none; }
-
-        /* Stealth Screen */
-        #stealth-overlay { display: none; position: fixed; inset: 0; background: white; color: black; z-index: 10000; justify-content: center; align-items: center; font-size: 2rem; flex-direction: column; }
-    </style>
-</head>
-<body>
-
-<div id="stealth-overlay">
-    <h2>Weekly Calculus Assessment</h2>
-    <p id="math-q">Solve: ∫ (3x² + 2x) dx</p>
-</div>
-
-<div class="header">
-    <img src="https://ibb.co" class="avatar">
-    <h1>Sigma_Trees Games</h1>
-    <p>v1.1.8 | Ready for Research</p>
-</div>
-
-<div class="nav">
-    <button class="btn" style="background:#1a73e8" onclick="toggleStealth()">STEALTH (P)</button>
-    <button class="btn" style="background:#d97706" onclick="deepFullscreen()">TRUE FULLSCREEN</button>
-</div>
-
-<div class="proxy-bar">
-    <input type="text" id="urlInput" placeholder="Enter URL to Proxy (e.g. google.com)">
-    <button class="btn" onclick="launchProxy()">GO</button>
-</div>
-
-<div class="grid">
-    <div class="card" onclick="load('https://krew.io')">⛵<span>Krew.io</span></div>
-    <div class="card" onclick="load('https://craftnite.io')">⛏️<span>Craftnite</span></div>
-    <div class="card" onclick="load('https://bloxd.io')">🧱<span>Bloxd.io</span></div>
-    <div class="card" onclick="load('https://geometrydashfullversion.io')">🟦<span>GD Full</span></div>
-    <div class="card" onclick="load('https://github.io')">🐒<span>Monkey Mart</span></div>
-    <div class="card" onclick="load('https://shellshock.io')">🥚<span>Shell Shock</span></div>
-    <div class="card" onclick="load('https://krunker.io')">🎯<span>Krunker</span></div>
-    <div class="card" onclick="load('https://github.io')">🔫<span>Gun Mayhem</span></div>
-    <div class="card" onclick="load('https://mope.io')">🐷<span>Mope.io</span></div>
-    <div class="card" onclick="load('https://flyordie.io')">🪰<span>FlyOrDie</span></div>
-</div>
-
-<div id="game-wrapper">
-    <iframe id="main-frame" src="about:blank" allow="fullscreen"></iframe>
-</div>
-
-<script>
-    const blacklist = ["porn", "xvideo", "hub", "hentai", "sex"];
-
-    function load(url) { document.getElementById('main-frame').src = url; }
-
-    function launchProxy() {
-        let val = document.getElementById('urlInput').value.toLowerCase();
-        if (blacklist.some(w => val.includes(w))) { alert("Site Blocked by Sigma_Trees"); return; }
-        load(val.includes('http') ? val : "https://" + val);
-    }
-
-    function toggleStealth() {
-        let over = document.getElementById('stealth-overlay');
-        over.style.display = (over.style.display === 'flex') ? 'none' : 'flex';
-    }
-
-    // FIXED: This now targets the entire screen
-    function deepFullscreen() {
-        let elem = document.getElementById('game-wrapper');
-        if (elem.requestFullscreen) elem.requestFullscreen();
-        else if (elem.webkitRequestFullscreen) elem.webkitRequestFullscreen();
-    }
-
-    // Key Listeners
-    let escTimer;
-    document.addEventListener('keydown', (e) => {
-        if (e.key.toLowerCase() === 'p') toggleStealth();
-        if (e.key === "Escape") {
-            escTimer = setTimeout(() => {
-                if (document.fullscreenElement) document.exitFullscreen();
-            }, 2000); // Must hold for 2 seconds
-        }
-    });
-
-    document.addEventListener('keyup', (e) => { if (e.key === "Escape") clearTimeout(escTimer); });
-</script>
-</body>
-</html>
 
