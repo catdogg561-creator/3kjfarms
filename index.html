@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sigma_Trees Games</title>
+    <!-- Proxy Script to help unblock frames -->
+    <script type="module" src="https://unpkg.com"></script>
     <style>
         :root {
             --bg-color: #050f05;
@@ -21,7 +23,6 @@
             overflow-x: hidden;
         }
 
-        /* Game Display Box */
         #game-display {
             display: none;
             flex-direction: column;
@@ -33,20 +34,14 @@
             border-radius: 10px;
         }
 
-        iframe {
+        /* The Box where the game shows */
+        #game-frame {
             width: 90%;
-            height: 500px;
+            height: 600px;
             border: none;
             background: #000;
         }
 
-        .controls-hint {
-            color: #888;
-            font-size: 0.8rem;
-            margin-top: 10px;
-        }
-
-        /* UI Elements */
         #searchBar {
             padding: 12px; width: 60%; max-width: 400px;
             border-radius: 25px; border: 2px solid var(--accent);
@@ -59,9 +54,7 @@
             color: var(--highlight); text-transform: uppercase;
         }
 
-        .game-grid {
-            display: flex; flex-wrap: wrap; justify-content: center; gap: 15px;
-        }
+        .game-grid { display: flex; flex-wrap: wrap; justify-content: center; gap: 15px; }
 
         .game-card {
             background-color: var(--card-bg);
@@ -70,11 +63,8 @@
             cursor: pointer; transition: 0.3s;
         }
 
-        .game-card:hover {
-            background: var(--highlight); color: #000; transform: scale(1.05);
-        }
+        .game-card:hover { background: var(--highlight); color: #000; transform: scale(1.05); }
 
-        /* Stealth Mode */
         #stealth-overlay {
             display: none; position: fixed; top: 0; left: 0; 
             width: 100%; height: 100%; background: white;
@@ -93,21 +83,20 @@
             "U might have to click on a game once or twice for it to work"
         </p>
 
-        <!-- Search & Info -->
         <input type="text" id="searchBar" placeholder="Search games..." onkeyup="searchGames()">
-        <p><small>Press <b>P</b> for Stealth Mode | Press <b>F</b> for Fullscreen | Hold <b>ESC</b> to close game</small></p>
+        <p><small><b>P</b>: Stealth | <b>F</b>: Fullscreen | <b>Hold ESC</b>: Close Game</small></p>
 
-        <!-- The Game Box -->
+        <!-- Game Box -->
         <div id="game-display">
-            <h3 id="current-game-title" style="margin-top:0">Game Loading...</h3>
-            <iframe id="game-frame" src=""></iframe>
-            <div class="controls-hint">
-                <button onclick="toggleFullscreen()">Go Fullscreen (F)</button>
-                <span> Hold ESC for 2 seconds to exit </span>
+            <h3 id="current-game-title" style="margin-top:0">Loading...</h3>
+            <!-- Proxy enabled iframe -->
+            <iframe id="game-frame" is="x-frame-bypass"></iframe>
+            <div style="margin-top:10px">
+                <button onclick="toggleFullscreen()">Fullscreen (F)</button>
             </div>
         </div>
 
-        <!-- Categories -->
+        <!-- Categorized Games -->
         <div id="categories-container">
             <div class="category-section">
                 <h2 class="category-title">Action & Shooters</h2>
@@ -119,7 +108,7 @@
             </div>
 
             <div class="category-section">
-                <h2 class="category-title">Evolution & Survival</h2>
+                <h2 class="category-title">Survival</h2>
                 <div class="game-grid">
                     <div class="game-card" onclick="loadGame('Mope.io', 'https://mope.io')">Mope.io</div>
                     <div class="game-card" onclick="loadGame('FlyOrDie', 'https://flyordie.io')">FlyOrDie.io</div>
@@ -128,13 +117,13 @@
             </div>
 
             <div class="category-section">
-                <h2 class="category-title">Multiplayer & Misc</h2>
+                <h2 class="category-title">Arcade & IO</h2>
                 <div class="game-grid">
+                    <div class="game-card" onclick="loadGame('Dashmetry', 'https://dashmetry.com/')">Dashmetry</div>
+                    <div class="game-card" onclick="loadGame('Hole.io', 'https://hole.io')">Hole.io</div>
+                    <div class="game-card" onclick="loadGame('Geometry Dash', 'https://geometrydashfullversion.io')">Geometry Dash</div>
                     <div class="game-card" onclick="loadGame('Krew.io', 'https://krew.io')">Krew.io</div>
                     <div class="game-card" onclick="loadGame('Bloxd.io', 'https://bloxd.io')">Bloxd.io</div>
-                    <div class="game-card" onclick="loadGame('Hole.io', 'https://hole-io.com')">Hole.io</div>
-                    <div class="game-card" onclick="loadGame('Geometry Dash', 'https://geometrydashfullversion.io')">Geometry Dash</div>
-                    <div class="game-card" onclick="loadGame('Dashmentry', 'https://dashmentry.io')">Dashmentry.io</div>
                 </div>
             </div>
         </div>
@@ -142,11 +131,11 @@
         <footer>Version 1.15</footer>
     </div>
 
-    <!-- Stealth Overlay -->
+    <!-- Stealth Mode -->
     <div id="stealth-overlay">
-        <h1>Worksheet: Quadratic Equations</h1>
+        <h1>Assignment: Statistics & Probability</h1>
         <p id="math-prob"></p>
-        <p>Solve for x and show all steps. Failure to provide work will result in point deductions.</p>
+        <p>Calculate the mean and standard deviation. Show all steps for full credit.</p>
     </div>
 
     <script>
@@ -155,7 +144,6 @@
         const gameTitle = document.getElementById('current-game-title');
         let escTimer;
 
-        // Load game into the box
         function loadGame(name, url) {
             gameTitle.innerText = name;
             gameFrame.src = url;
@@ -163,44 +151,33 @@
             window.scrollTo({top: 0, behavior: 'smooth'});
         }
 
-        // Search Logic
         function searchGames() {
             let input = document.getElementById('searchBar').value.toLowerCase();
-            let cards = document.querySelectorAll('.game-card');
-            cards.forEach(card => {
+            document.querySelectorAll('.game-card').forEach(card => {
                 card.style.display = card.innerText.toLowerCase().includes(input) ? "block" : "none";
             });
         }
 
-        // Fullscreen Logic
         function toggleFullscreen() {
-            if (!document.fullscreenElement) {
-                gameFrame.requestFullscreen().catch(err => {
-                    alert(`Error: ${err.message}`);
-                });
-            }
+            if (!document.fullscreenElement) gameFrame.requestFullscreen();
         }
 
-        // Keyboard Shortcuts
         window.addEventListener('keydown', (e) => {
-            // Stealth Mode (P)
+            // Stealth (P)
             if (e.key.toLowerCase() === 'p') {
                 const stealth = document.getElementById('stealth-overlay');
-                const math = document.getElementById('math-prob');
                 if (stealth.style.display === "block") {
                     stealth.style.display = "none";
                 } else {
-                    math.innerText = `Problem: ${Math.floor(Math.random()*50)}x² + ${Math.floor(Math.random()*100)} = 0`;
+                    document.getElementById('math-prob').innerText = `Solve: P(A|B) if P(A) = 0.${Math.floor(Math.random()*9)} and P(B) = 0.${Math.floor(Math.random()*9)}`;
                     stealth.style.display = "block";
                 }
             }
 
             // Fullscreen (F)
-            if (e.key.toLowerCase() === 'f' && gameDisplay.style.display === "flex") {
-                toggleFullscreen();
-            }
+            if (e.key.toLowerCase() === 'f' && gameDisplay.style.display === "flex") toggleFullscreen();
 
-            // Hold ESC for 2 seconds to Close
+            // Hold ESC (2 seconds)
             if (e.key === "Escape") {
                 escTimer = setTimeout(() => {
                     gameFrame.src = "";
@@ -210,9 +187,7 @@
         });
 
         window.addEventListener('keyup', (e) => {
-            if (e.key === "Escape") {
-                clearTimeout(escTimer);
-            }
+            if (e.key === "Escape") clearTimeout(escTimer);
         });
     </script>
 </body>
