@@ -51,6 +51,22 @@
             width: fit-content; margin-left: auto; margin-right: auto;
             border: 1px solid rgba(255,255,255,0.1);
         }
+        .footer-contact {
+    position: fixed;
+    bottom: 15px;
+    right: 20px;
+    font-size: 11px;
+    opacity: 0.6;
+    color: var(--text); /* Matches your theme text color */
+    z-index: 10000;
+}
+
+.footer-contact a {
+    color: var(--accent); /* Matches your theme's blue/purple accent */
+    text-decoration: none;
+    font-weight: bold;
+}
+
         .theme-dot {
             width: 40px; height: 40px; border-radius: 50%; cursor: pointer;
             border: 3px solid white; transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
@@ -353,8 +369,16 @@
             }
         });
         window.addEventListener('keyup', (e) => { if(e.key === "Escape") clearTimeout(escHold); });
-    </script>
+  </script>
+
+<div class="footer-contact">
+    Question comment? email me at <a href="mailto:cyborgv42@gmail.com">cyborgv42@gmail.com</a>
+</div>
+
 </body>
+</html>
+
+
 </html>
 
 
