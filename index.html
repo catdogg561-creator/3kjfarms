@@ -3,50 +3,62 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Math Pine Tree</title>
+    <title>Math is Healthy</title>
     <style>
         body {
-            background-color: #0d1117; /* GitHub Dark Theme Color */
-            color: #39d353; /* GitHub Green */
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f0fdf4;
+            color: #166534;
             display: flex;
             flex-direction: column;
-            justify-content: center;
             align-items: center;
-            height: 100vh;
+            padding: 50px;
             margin: 0;
-            font-family: monospace;
-            line-height: 1.2;
         }
-        pre {
-            font-size: 1.5rem;
-            font-weight: bold;
-            text-align: center;
-            margin-bottom: 20px;
+        h1 { font-size: 3rem; margin-bottom: 20px; }
+        .container {
+            position: relative;
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            max-width: 600px;
+            z-index: 1;
         }
-        .text-box {
-            font-size: 1.2rem;
-            border: 1px solid #39d353;
-            padding: 10px;
-            border-radius: 5px;
+        ul { line-height: 1.8; font-size: 1.2rem; }
+        
+        /* Tree Decorations */
+        .tree {
+            position: fixed;
+            bottom: 0;
+            font-size: 150px;
+            z-index: 0;
+            user-select: none;
+        }
+        #tree-left { left: 5%; }
+        #tree-right { right: 5%; }
+
+        @media (max-width: 800px) {
+            .tree { display: none; }
         }
     </style>
 </head>
 <body>
 
-<pre>
-       Δ
-      / \
-     /math\
-    /      \
-   /________\
+    <div id="tree-left" class="tree">🌳</div>
+    <div id="tree-right" class="tree">🌲</div>
 
-
-      |  |
-</pre>
-
-<div class="text-box">
-    ( gng uk I can block it anytime _
-</div>
+    <div class="container">
+        <h1>Math is Healthy!</h1>
+        <p>Keeping your brain active with mathematics is like a workout for your mind. Here is why:</p>
+        <ul>
+            <li><strong>Boosts Brain Plasticity:</strong> Solving problems strengthens neural pathways.</li>
+            <li><strong>Reduces Stress:</strong> Focusing on logic can provide a "flow state" that calms the mind.</li>
+            <li><strong>Improves Decision Making:</strong> Math trains you to look at data objectively.</li>
+            <li><strong>Enhances Memory:</strong> Working through complex steps sharpens short-term recall.</li>
+            <li><strong>Slows Cognitive Decline:</strong> Regular mental "exercise" helps keep the brain young.</li>
+        </ul>
+    </div>
 
 </body>
 </html>
